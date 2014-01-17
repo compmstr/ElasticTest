@@ -2,6 +2,7 @@ package elasticsearch.qa
 
 import models.Question
 import play.api.libs.json._
+import scala.language.implicitConversions
 
 object IndexableQuestion {
   implicit def questionConvert(q: Question): IndexableQuestion = new IndexableQuestion(q)

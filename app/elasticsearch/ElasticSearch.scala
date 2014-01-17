@@ -7,6 +7,7 @@ import models.QuestionResponse
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import org.joda.time.DateTime
+import scala.language.implicitConversions
 
 trait Indexable {
   val index: String
@@ -36,6 +37,8 @@ trait Index {
 }
 
 object ElasticSearch {
+	implicit def listConversion[T](l: List[T])(implicit conv: T => Indexable): List[Indexable] = 
+	  l.map(conv(_)).toList
 	  
 	val elasticAPIUrl = "http://localhost:9200/"
 	  
@@ -71,4 +74,22 @@ object ElasticSearch {
 	  println("Got Response: " + r.status + " -- " + r.statusText + "\n" + r.body)
 	  r
 	}
+	
+}
+
+object ElasticSearchTester{
+
+	def exampleUsage(){
+	  import elasticsearch.ElasticSearch._
+	  import models.{Question, QuestionResponse}
+	  import elasticsearch.qa._
+	  import IndexableQuestion.questionConvert
+	  import IndexableResponse.responseConvert
+	  
+	  QAIndex.delete.map(println)
+	  QAIndex.create.map(println)
+	  indexBatch(Question.getAll).map(println)
+	  indexBatch(QuestionResponse.getAll).map(println)
+	}
+  
 }
