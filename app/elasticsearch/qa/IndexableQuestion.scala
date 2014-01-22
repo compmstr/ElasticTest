@@ -21,6 +21,10 @@ object IndexableQuestion {
       	    	    "course" -> Json.obj(
 		      	    	    		"type" -> "long"
 		      	    	    		),
+      	    	    "tags" -> Json.obj(
+		      	    	    		"type" -> "string",
+		      	    	    		"index_name" -> "tags"
+		      	    	    		),
       	    	    "lecture" -> Json.obj(
 		      	    	    		"type" -> "long"
 		      	    	    		),
@@ -40,9 +44,9 @@ class IndexableQuestion(q: Question) extends QAIndex.QAIndexable {
   val id = questionId(q)
   val dataType = "question"
 
-  private case class QuestionData(id: Long, user: Long, course: Long, lecture: Long, text: String, created: Long)
+  private case class QuestionData(id: Long, user: Long, course: Long, lecture: Long, text: String, created: Long, tags: Array[String])
   private implicit def questionDataConvert(q: Question): QuestionData = 
-    QuestionData(q.id, q.user, q.course, q.lecture, q.text, q.created.getMillis())
+    QuestionData(q.id, q.user, q.course, q.lecture, q.text, q.created.getMillis(), q.tags)
   private implicit val questionDataWriter = Json.writes[QuestionData]
 
   lazy val indexData = Json.toJson[QuestionData](q)

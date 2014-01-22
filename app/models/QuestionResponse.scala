@@ -2,7 +2,7 @@ package models
 
 import org.joda.time.DateTime
 
-case class QuestionResponse(id: Long, user: Long, question: Long, text: String, created: DateTime)
+case class QuestionResponse(id: Long, user: Long, question: Long, text: String, created: DateTime, tags: Array[String] = Array())
 
 object QuestionResponse{
   private var responses = Map[Long, QuestionResponse]()
